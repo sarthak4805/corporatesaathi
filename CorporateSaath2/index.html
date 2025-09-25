@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title> Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            'brand-purple': '#6366f1',
+            'brand-blue': '#3b82f6',
+            'brand-green': '#10b981',
+            'brand-yellow': '#f59e0b',
+          },
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased overflow-hidden">
+
+  <div class="flex h-screen overflow-hidden">
+
+    <aside class="flex-shrink-0 w-64 bg-gray-800 dark:bg-gray-950 text-gray-300 p-6 flex flex-col transition-all duration-300 transform -translate-x-full md:translate-x-0 z-50 fixed inset-y-0 left-0">
+      <div class="flex items-center space-x-2 mb-8">
+        <span class="text-xl font-bold text-white">Dashboard</span>
+      </div>
+      <nav class="space-y-2 flex-grow scrollbar-hide overflow-y-auto">
+        <a href="#" data-target="overview-section" class="nav-link flex items-center space-x-3 p-3 rounded-lg bg-gray-700 dark:bg-gray-800 text-white">
+          <span>Overview</span>
+        </a>
+        <a href="#" data-target="charts-section" class="nav-link flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-800">
+          <span>Charts & Trends</span>
+        </a>
+        <a href="#" data-target="employees-section" class="nav-link flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-800">
+          <span>Employees</span>
+        </a>
+        <a href="#" data-target="departments-section" class="nav-link flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-800">
+          <span>Departments</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="flex-1 md:ml-64 p-6 overflow-y-auto scrollbar-hide transition-all duration-300">
+
+      <header class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 shadow rounded-lg mb-6 sticky top-0 z-40">
+        <div class="flex items-center space-x-4">
+          <button id="menu-btn" class="md:hidden text-gray-500 hover:text-gray-900 dark:hover:text-white focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+          </button>
+          <h1 class="text-2xl font-bold">CorporateSaathi</h1>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <div class="relative group">
+            <button class="relative p-2 text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 rounded-full">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 17h5l-1.405-1.405C18.667 14.53 19 13.793 19 13V9a6 6 0 00-12 0v4c0 .793.333 1.53.405 2.595L4 17h5m-2 4h10a2 2 0 002-2H5a2 2 0 002 2z" />
+              </svg>
+              <span class="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500"></span>
+            </button>
+            <div class="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-800 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 transform scale-95 group-hover:scale-100">
+              <div class="p-4 border-b dark:border-gray-700">
+                <h3 class="font-semibold">Notifications</h3>
+              </div>
+              <div class="p-4 space-y-2 text-sm max-h-64 overflow-y-auto scrollbar-hide">
+                <div class="p-2 bg-gray-50 dark:bg-gray-700 rounded-md">New service request received from client.</div>
+                <div class="p-2 bg-gray-50 dark:bg-gray-700 rounded-md">Project deadline is tomorrow.</div>
+                <div class="p-2 bg-gray-50 dark:bg-gray-700 rounded-md">You have a new email from Smita Sharma.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="relative group">
+            <button class="relative p-2 text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 rounded-full">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-2 6v4a2 2 0 01-2 2H7a2 2 0 01-2-2v-4" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6h16a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2z" />
+              </svg>
+            </button>
+            <div class="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-800 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 transform scale-95 group-hover:scale-100">
+              <div class="p-4 border-b dark:border-gray-700">
+                <h3 class="font-semibold">Email</h3>
+              </div>
+              <div class="p-4 space-y-2 text-sm max-h-64 overflow-y-auto scrollbar-hide">
+                <div class="p-2 bg-gray-50 dark:bg-gray-700 rounded-md">Subject: Q3 Report - Smita Sharma</div>
+                <div class="p-2 bg-gray-50 dark:bg-gray-700 rounded-md">Subject: Meeting today - Ayush Kumar</div>
+                <div class="p-2 bg-gray-50 dark:bg-gray-700 rounded-md">Subject: New task assigned - Project</div>
+              </div>
+            </div>
+          </div>
+
+          <button id="dark-mode-toggle" class="p-2 rounded-full text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200">
+            <!-- You can add icon here -->
+            🌗
+          </button>
+
+          <div class="flex items-center space-x-2">
+            <img class="h-8 w-8 rounded-full object-cover" src="https://placehold.co/32x32/14b8a6/white?text=A" alt="Avatar">
+            <span class="font-semibold">Admin</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="flex space-x-4 mb-6 sticky top-20 z-30 bg-gray-100 dark:bg-gray-900 p-2 rounded-lg">
+        <button id="tab-overview" class="tab-btn px-4 py-2 rounded-lg font-medium bg-brand-blue text-white transition-colors duration-200" data-target="overview-section">Overview</button>
+        <button id="tab-charts" class="tab-btn px-4 py-2 rounded-lg font-medium bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 transition-colors duration-200" data-target="charts-section">Charts & Trends</button>
+      </div>
+
+      <div id="overview-section" class="tab-content active">
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex items-center justify-between transition-transform duration-300 hover:scale-105">
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Project Progress %</h3>
+              <p class="mt-1 text-3xl font-bold">75%</p>
+            </div>
+            <div class="p-3 rounded-full bg-brand-blue text-white">📊</div>
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex items-center justify-between transition-transform duration-300 hover:scale-105">
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Service Requests</h3>
+              <p class="mt-1 text-3xl font-bold">1,250</p>
+            </div>
+            <div class="p-3 rounded-full bg-brand-green text-white">📋</div>
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex items-center justify-between transition-transform duration-300 hover:scale-105">
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Active Employees Today</h3>
+              <p class="mt-1 text-3xl font-bold" id="activeEmployees">250/300</p>
+            </div>
+            <div class="p-3 rounded-full bg-brand-yellow text-white">👥</div>
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex items-center justify-between transition-transform duration-300 hover:scale-105">
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Revenue</h3>
+              <p class="mt-1 text-3xl font-bold">1.5M</p>
+            </div>
+            <div class="p-3 rounded-full bg-brand-purple text-white">💰</div>
+          </div>
+        </section>
+
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="text-lg font-semibold mb-4">Recent Activity</h2>
+            <ul class="space-y-4 text-sm">
+              <li class="flex items-center space-x-3">
+                <div class="p-2 rounded-full bg-brand-blue text-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M21 16H3a1 1 0 01-1-1V9a1 1 0 011-1h18a1 1 0 011 1v6a1 1 0 01-1 1zm-1-7H4v6h16V9z" />
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-medium">New project created by Raj Sharma.</p>
+                  <span class="text-gray-500 text-xs">2 hours ago</span>
+                </div>
+              </li>
+              <li class="flex items-center space-x-3">
+                <div class="p-2 rounded-full bg-brand-green text-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-medium">New client added to the database.</p>
+                  <span class="text-gray-500 text-xs">Yesterday</span>
+                </div>
+              </li>
+              <li class="flex items-center space-x-3">
+                <div class="p-2 rounded-full bg-brand-yellow text-white">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-6h2v6zm4 0h-2V7h2v10z" />
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-medium">Project milestone 2 completed.</p>
+                  <span class="text-gray-500 text-xs">3 days ago</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="text-lg font-semibold mb-4">Employees Leave Requests</h2>
+            <ul class="space-y-4 text-sm">
+              <li class="flex items-center justify-between p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                <div class="flex items-center space-x-3">
+                  <div class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300"></div>
+                  <div>
+                    <p class="font-medium">Smita Sharma</p>
+                    <span class="text-gray-500 text-xs">Oct 25 - Oct 27</span>
+                  </div>
+                </div>
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">Pending</span>
+              </li>
+              <li class="flex items-center justify-between p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200">
+                <div class="flex items-center space-x-3">
+                  <div class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300"></div>
+                  <div>
+                    <p class="font-medium">Raj Sharma</p>
+                    <span class="text-gray-500 text-xs">Nov 1 - Nov 5</span>
+                  </div>
+                </div>
+                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">Approved</span>
+              </li>
+              <!-- more items... -->
+            </ul>
+          </div>
+        </section>
+      </div>
+
+      <div id="charts-section" class="tab-content hidden">
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-lg font-semibold">Employee Attendance Trend</h2>
+              <div class="flex space-x-2">
+                <button id="attendance-daily-btn" class="px-4 py-2 text-sm font-medium rounded-md bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors duration-200">Daily</button>
+                <button id="attendance-monthly-btn" class="px-4 py-2 text-sm font-medium rounded-md bg-brand-blue text-white transition-colors duration-200">Monthly</button>
+              </div>
+            </div>
+            <div class="chart-container" style="height:260px;">
+              <canvas id="attendanceChart"></canvas>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="text-lg font-semibold mb-4">Services Requested / Services Completed</h2>
+            <div class="chart-container" style="height:260px;">
+              <canvas id="servicesChart"></canvas>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="text-lg font-semibold mb-4">Department-wise Task Completion</h2>
+            <div class="chart-container" style="height:260px;">
+              <canvas id="tasksChart"></canvas>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="text-lg font-semibold mb-4">Financial Overview</h2>
+            <div class="chart-container" style="height:260px;">
+              <canvas id="financeChart"></canvas>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+            <h2 class="text-lg font-semibold mb-4">New Clients</h2>
+            <div class="chart-container" style="height:260px;">
+              <canvas id="clientsChart"></canvas>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Employees Section (added) -->
+      <div id="employees-section" class="tab-content hidden">
+        <section class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+          <h2 class="text-xl font-semibold mb-4">Employees</h2>
+          <table class="min-w-full table-auto border-collapse">
+            <thead>
+              <tr class="bg-gray-200 dark:bg-gray-700">
+                <th class="p-3 text-left">Name</th>
+                <th class="p-3 text-left">Role</th>
+                <th class="p-3 text-left">Department</th>
+                <th class="p-3 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="employeesTbody">
+              <tr class="border-b dark:border-gray-700" data-empid="emp-1">
+                <td class="p-3"><button class="employee-name text-left">Raj Sharma</button></td>
+                <td class="p-3">Manager</td>
+                <td class="p-3">HR</td>
+                <td class="p-3 flex gap-2">
+                  <button class="edit-employee px-2 py-1 text-xs rounded bg-brand-blue text-white">Edit</button>
+                  <button class="delete-employee px-2 py-1 text-xs rounded bg-red-500 text-white">Delete</button>
+                </td>
+              </tr>
+              <tr class="border-b dark:border-gray-700" data-empid="emp-2">
+                <td class="p-3"><button class="employee-name text-left">Smita Sharma</button></td>
+                <td class="p-3">Developer</td>
+                <td class="p-3">IT</td>
+                <td class="p-3 flex gap-2">
+                  <button class="edit-employee px-2 py-1 text-xs rounded bg-brand-blue text-white">Edit</button>
+                  <button class="delete-employee px-2 py-1 text-xs rounded bg-red-500 text-white">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="mt-4 flex gap-2">
+            <button id="openEmployeeModal" class="px-4 py-2 bg-brand-green text-white rounded">+ Add Employee</button>
+            <button id="exportEmployeesBtn" class="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded">Export (CSV)</button>
+          </div>
+        </section>
+      </div>
+
+      <!-- Departments Section (added) -->
+      <div id="departments-section" class="tab-content hidden">
+        <section class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+          <h2 class="text-xl font-semibold mb-4">Departments</h2>
+          <table class="min-w-full table-auto border-collapse">
+            <thead>
+              <tr class="bg-gray-200 dark:bg-gray-700">
+                <th class="p-3 text-left">Department</th>
+                <th class="p-3 text-left">Head</th>
+                <th class="p-3 text-left">Resources</th>
+                <th class="p-3 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="departmentsTbody">
+              <tr class="border-b dark:border-gray-700" data-deptid="dept-1">
+                <td class="p-3">HR</td>
+                <td class="p-3">Raj Sharma</td>
+                <td class="p-3 dept-resources">12 Employees</td>
+                <td class="p-3 flex gap-2">
+                  <button class="edit-dept px-2 py-1 text-xs rounded bg-brand-blue text-white">Edit</button>
+                  <button class="delete-dept px-2 py-1 text-xs rounded bg-red-500 text-white">Delete</button>
+                </td>
+              </tr>
+              <tr class="border-b dark:border-gray-700" data-deptid="dept-2">
+                <td class="p-3">IT</td>
+                <td class="p-3">Smita Sharma</td>
+                <td class="p-3 dept-resources">25 Employees</td>
+                <td class="p-3 flex gap-2">
+                  <button class="edit-dept px-2 py-1 text-xs rounded bg-brand-blue text-white">Edit</button>
+                  <button class="delete-dept px-2 py-1 text-xs rounded bg-red-500 text-white">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="mt-4 flex gap-2">
+            <button id="openDepartmentModal" class="px-4 py-2 bg-brand-green text-white rounded">+ Add Department</button>
+            <button id="exportDepartmentsBtn" class="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded">Export (CSV)</button>
+          </div>
+        </section>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Employee Modal -->
+  <div id="employeeModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96">
+      <h2 class="text-xl font-semibold mb-4">Add / Edit Employee</h2>
+      <input id="employeeNameInput" type="text" placeholder="Employee Name" class="w-full mb-3 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+      <select id="employeeRoleInput" class="w-full mb-3 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+        <option value="Manager">Manager</option>
+        <option value="Developer">Developer</option>
+        <option value="HR">HR</option>
+        <option value="Sales">Sales</option>
+      </select>
+      <input id="employeeDeptInput" type="text" placeholder="Department" class="w-full mb-3 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+      <label class="text-sm mb-2 block">Upload Documents (optional)</label>
+      <input id="employeeDocsInput" type="file" class="w-full mb-3 p-1 text-sm" />
+      <div class="flex justify-between items-center">
+        <div class="text-sm text-gray-500">Assign permissions</div>
+        <div>
+          <label class="inline-flex items-center"><input id="permView" type="checkbox" class="mr-2"> View</label>
+          <label class="inline-flex items-center ml-2"><input id="permEdit" type="checkbox" class="mr-2"> Edit</label>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 mt-4">
+        <button id="closeEmployeeModal" class="px-4 py-2 bg-gray-400 text-white rounded">Cancel</button>
+        <button id="saveEmployeeBtn" class="px-4 py-2 bg-brand-green text-white rounded">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Department Modal -->
+  <div id="departmentModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96">
+      <h2 class="text-xl font-semibold mb-4">Add / Edit Department</h2>
+      <input id="departmentNameInput" type="text" placeholder="Department Name" class="w-full mb-3 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+      <input id="departmentHeadInput" type="text" placeholder="Head of Department" class="w-full mb-3 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+      <div class="flex justify-end gap-2">
+        <button id="closeDepartmentModal" class="px-4 py-2 bg-gray-400 text-white rounded">Cancel</button>
+        <button id="saveDepartmentBtn" class="px-4 py-2 bg-brand-green text-white rounded">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Employee Detail Modal -->
+  <div id="employeeDetailModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96">
+      <h2 id="detailName" class="text-xl font-semibold mb-2">Employee Name</h2>
+      <p id="detailRole" class="text-sm mb-1">Role: </p>
+      <p id="detailDept" class="text-sm mb-1">Department: </p>
+      <p id="detailPerms" class="text-sm mb-2">Permissions: </p>
+      <div id="detailDocs" class="text-sm mb-4">Documents: None</div>
+      <div class="flex justify-end">
+        <button id="closeEmployeeDetail" class="px-4 py-2 bg-gray-400 text-white rounded">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

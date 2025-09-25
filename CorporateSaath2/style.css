@@ -1,0 +1,26 @@
+.body {
+  font-family: 'Inter', sans-serif;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+ }
+
+.scrollbar-hide {
+     -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.chart-container {
+     position: relative;
+     height: 24rem; 
+     width: 100%;
+}
