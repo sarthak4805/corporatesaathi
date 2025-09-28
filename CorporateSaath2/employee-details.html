@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Details</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+
+  <div class="max-w-6xl mx-auto p-6">
+    <!-- Back to Dashboard -->
+    <a href="index.html" class="text-brand-blue underline mb-4 inline-block">← Back to Dashboard</a>
+
+    <!-- Profile -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8 flex items-center gap-4">
+      <!-- Avatar -->
+      <div class="w-20 h-20 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-2xl font-bold text-white">
+        <span id="empInitial">A</span>
+      </div>
+      <!-- Info -->
+      <div>
+        <h2 id="empName" class="text-2xl font-bold mb-2">Employee Name</h2>
+        <p id="empRole" class="text-sm">Role: </p>
+        <p id="empDept" class="text-sm">Department: </p>
+        <p id="empJoin" class="text-sm">Joining Date: </p>
+        <p id="empContact" class="text-sm">Email: </p>
+      </div>
+    </div>
+
+    <!-- Personal & Professional Details -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+      <h3 class="text-xl font-semibold mb-4">Personal & Professional Details</h3>
+      <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <li><strong>Date of Birth:</strong> <span id="empDob">--</span></li>
+        <li><strong>Phone:</strong> <span id="empPhone">--</span></li>
+        <li><strong>Address:</strong> <span id="empAddress">--</span></li>
+        <li><strong>Experience:</strong> <span id="empExperience">--</span></li>
+      </ul>
+    </div>
+
+    <!-- Documents -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+      <h3 class="text-xl font-semibold mb-4">Documents</h3>
+      <ul id="empDocs" class="space-y-3">
+        <li class="flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-2 rounded">
+          <span>Offer Letter.pdf</span>
+          <div class="flex gap-2">
+            <a href="docs/offer-letter.pdf" target="_blank" class="px-3 py-1 bg-brand-blue text-white rounded text-sm">View</a>
+            <a href="docs/offer-letter.pdf" download class="px-3 py-1 bg-brand-green text-white rounded text-sm">Download</a>
+          </div>
+        </li>
+        <li class="flex items-center justify-between bg-gray-50 dark:bg-gray-700 p-2 rounded">
+          <span>ID Proof.pdf</span>
+          <div class="flex gap-2">
+            <a href="docs/id-proof.pdf" target="_blank" class="px-3 py-1 bg-brand-blue text-white rounded text-sm">View</a>
+            <a href="docs/id-proof.pdf" download class="px-3 py-1 bg-brand-green text-white rounded text-sm">Download</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Performance History & Assignments -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-semibold mb-4">Performance History</h3>
+        <canvas id="performanceChart" height="150"></canvas>
+      </div>
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-semibold mb-4">Current Assignments</h3>
+        <ul class="space-y-2 text-sm">
+          <li class="flex justify-between border-b pb-2">
+            <span>Project Alpha</span>
+            <span class="text-green-500">Ongoing</span>
+          </li>
+          <li class="flex justify-between border-b pb-2">
+            <span>Client Service Portal</span>
+            <span class="text-yellow-500">Pending</span>
+          </li>
+          <li class="flex justify-between">
+            <span>Internal HR Tool</span>
+            <span class="text-blue-500">Completed</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Attendance & Leave -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-semibold mb-4">Attendance</h3>
+        <canvas id="attendanceChart" height="150"></canvas>
+      </div>
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-semibold mb-4">Leave Records</h3>
+        <table class="min-w-full text-sm">
+          <thead>
+            <tr class="bg-gray-200 dark:bg-gray-700">
+              <th class="p-2 text-left">Date</th>
+              <th class="p-2 text-left">Type</th>
+              <th class="p-2 text-left">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="p-2">2025-01-10</td>
+              <td class="p-2">Sick Leave</td>
+              <td class="p-2 text-green-500">Approved</td>
+            </tr>
+            <tr>
+              <td class="p-2">2025-02-05</td>
+              <td class="p-2">Casual Leave</td>
+              <td class="p-2 text-yellow-500">Pending</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Get employee ID
+    const params = new URLSearchParams(window.location.search);
+    const empId = params.get("id");
+
+    // Dummy Employee Data
+    const employees = {
+      1: { 
+        name: "Raj Sharma", role: "Manager", dept: "HR", join: "2018-05-20", 
+        contact: "raj.sharma@corp.com", dob: "1990-02-15", phone: "+91-9876543210", 
+        address: "Delhi, India", experience: "7 Years"
+      },
+      2: { 
+        name: "Smita Sharma", role: "Developer", dept: "IT", join: "2020-09-01", 
+        contact: "smita.sharma@corp.com", dob: "1995-11-12", phone: "+91-9123456789", 
+        address: "Mumbai, India", experience: "4 Years"
+      }
+    };
+
+    if (employees[empId]) {
+      const emp = employees[empId];
+      document.getElementById("empName").textContent = emp.name;
+      document.getElementById("empRole").textContent = "Role: " + emp.role;
+      document.getElementById("empDept").textContent = "Department: " + emp.dept;
+      document.getElementById("empJoin").textContent = "Joining Date: " + emp.join;
+      document.getElementById("empContact").textContent = "Email: " + emp.contact;
+      document.getElementById("empDob").textContent = emp.dob;
+      document.getElementById("empPhone").textContent = emp.phone;
+      document.getElementById("empAddress").textContent = emp.address;
+      document.getElementById("empExperience").textContent = emp.experience;
+      document.getElementById("empInitial").textContent = emp.name.charAt(0);
+    }
+
+    // Performance Chart
+    new Chart(document.getElementById('performanceChart'), {
+      type: 'line',
+      data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+        datasets: [{
+          label: "Performance %", 
+          data: [70, 80, 85, 90, 88],
+          borderColor: "#3b82f6",
+          backgroundColor: "rgba(59,130,246,0.2)",
+          fill: true,
+          tension: 0.3
+        }]
+      }
+    });
+
+    // Attendance Chart
+    new Chart(document.getElementById('attendanceChart'), {
+      type: 'bar',
+      data: {
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        datasets: [{
+          label: "Attendance %", 
+          data: [100, 95, 90, 85, 100],
+          backgroundColor: "#10b981"
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+  </script>
+</body>
+</html>
